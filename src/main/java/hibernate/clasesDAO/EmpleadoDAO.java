@@ -14,9 +14,18 @@ public class EmpleadoDAO {
 		                   .setMaxResults(1)
 		                   .uniqueResult();
 	    return empleado;
+	    //s.get(Empleado.class, codigo);
 		}
 	
 	public static void insertClient(Session s, Empleado empleado) {
-				s.save(empleado);
+		s.save(empleado);
+	}
+	
+	public static void deleteEmpleado(Session s, Empleado empleado) {
+		s.delete(empleado);
+	}
+	
+	public static void updateEmpleado(Session s, Empleado empleado) {
+		s.update(empleado);
 	}
 }

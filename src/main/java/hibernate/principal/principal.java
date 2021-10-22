@@ -19,26 +19,34 @@ public class principal {
 //		
 //		System.out.println(getEmp.toString());
 		
-//		try {
+		try {
+			
+			tx = session.beginTransaction();
+			
+			Empleado emp = new Empleado(400, "Nombre", "Apellido1", "Apellido2", "Lugar nacimiento", "fecha", "Direccion", "telefono", "puesto", 0);
+			EmpleadoDAO.insertClient(session, emp);
+			
+//			Empleado borr = EmpleadoDAO.getClient(session, 400);
 //			
-//			tx = session.beginTransaction();
-//			
-//			Empleado emp = new Empleado(400, "Nombre", "Apellido1", "Apellido2", "Lugar nacimiento", "fecha", "Direccion", "telefono", "puesto", 0);
-//			EmpleadoDAO.insertClient(session, emp);
-//			
-//			tx.commit();
-//			
-//			
-//			
-//		} catch (Exception e) {
-//			if (tx != null) {
-//			    tx.rollback();
-//			  }
-//		}finally {
-//			if (session != null) {
-//				session.close();
-//			}
-//		}
+//			EmpleadoDAO.deleteEmpleado(session, borr);
+			
+			emp.setApellido1("updateApellido");
+			
+			EmpleadoDAO.updateEmpleado(session, emp);
+			
+			tx.commit();
+			
+			
+			
+		} catch (Exception e) {
+			if (tx != null) {
+			    tx.rollback();
+			  }
+		}finally {
+			if (session != null) {
+				session.close();
+			}
+		}
 	}
 
 }
