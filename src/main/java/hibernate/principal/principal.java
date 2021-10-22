@@ -15,7 +15,7 @@ public class principal {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		
-//		Empleado getEmp = EmpleadoDAO.getClient(session, 1);
+//		Empleado getEmp = EmpleadoDAO.getEmpleado(session, 1);
 //		
 //		System.out.println(getEmp.toString());
 		
@@ -24,9 +24,9 @@ public class principal {
 			tx = session.beginTransaction();
 			
 			Empleado emp = new Empleado(400, "Nombre", "Apellido1", "Apellido2", "Lugar nacimiento", "fecha", "Direccion", "telefono", "puesto", 0);
-			EmpleadoDAO.insertClient(session, emp);
+			EmpleadoDAO.insertEmpleado(session, emp);
 			
-//			Empleado borr = EmpleadoDAO.getClient(session, 400);
+//			Empleado borr = EmpleadoDAO.getEmpleado(session, 400);
 //			
 //			EmpleadoDAO.deleteEmpleado(session, borr);
 			

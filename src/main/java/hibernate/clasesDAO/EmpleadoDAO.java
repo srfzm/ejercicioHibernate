@@ -6,18 +6,18 @@ import hibernate.ejercicioHibernate.Empleado;
 
 public class EmpleadoDAO {
 
-	public static Empleado getClient(Session s, int codigo) {
-		  String hQuery = " from Empleado c " +
-		                  " where c.codigo = :codigo";
-		  Empleado empleado = s.createQuery(hQuery, Empleado.class)
-		                   .setParameter("codigo", codigo)
-		                   .setMaxResults(1)
-		                   .uniqueResult();
-	    return empleado;
-	    //s.get(Empleado.class, codigo);
+	public static Empleado getEmpleado(Session s, int codigo) {
+//		  String hQuery = " from Empleado c " +
+//		                  " where c.codigo = :codigo";
+//		  Empleado empleado = s.createQuery(hQuery, Empleado.class)
+//		                   .setParameter("codigo", codigo)
+//		                   .setMaxResults(1)
+//		                   .uniqueResult();
+//	    return empleado;
+	    return s.get(Empleado.class, codigo);
 		}
 	
-	public static void insertClient(Session s, Empleado empleado) {
+	public static void insertEmpleado(Session s, Empleado empleado) {
 		s.save(empleado);
 	}
 	
