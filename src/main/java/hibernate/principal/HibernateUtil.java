@@ -11,7 +11,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 public class HibernateUtil {
 	
-	private static Logger logger = LogManager.getLogger(HibernateUtil.class);
+//	private static Logger logger = LogManager.getLogger(HibernateUtil.class);
 	// La SessionFactory se establece una sola vez por aplicacion!
 	private static final SessionFactory sessionFactory = buildSessionFactory();
 	
@@ -24,10 +24,10 @@ public class HibernateUtil {
 		try {
 			Metadata metadata = new MetadataSources(standardRegistry).getMetadataBuilder().build();
 			SessionFactory sessionFactory= metadata.getSessionFactoryBuilder().build();
-			logger.info(String.format("%1$s: SessionFactory created.", methodName));
+//			logger.info(String.format("%1$s: SessionFactory created.", methodName));
 			return sessionFactory;
 		} catch (Exception ex) {
-			logger.error(String.format("%1$s: Initial SessionFactory creation failed.", methodName), ex); 
+//			logger.error(String.format("%1$s: Initial SessionFactory creation failed.", methodName), ex); 
 			throw new ExceptionInInitializerError(ex);
 		}
 	}
