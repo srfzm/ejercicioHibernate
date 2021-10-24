@@ -31,8 +31,8 @@ public class EmpleadoDAO {
 	}
 	
 	public static int getNewCodigo(Session s) {
-		String hql= "SELECT max(Empleado.codigo) from Empleado";
-		Query<Empleado> query = s.createQuery(hql,Empleado.class);
-		return query.getSingleResult().getCodigo()+1;
+		String hql= "SELECT max(codigo) from Empleado";
+		Query query = s.createQuery(hql);
+		return (int)query.getSingleResult()+1;
 	}
 }

@@ -24,8 +24,8 @@ public class DepartamentoDAO {
 	}
 	
 	public static int getNewCodigo(Session s) {
-		String hql= "SELECT max(Departamento.codigo) from Departamento";
-		Query<Departamento> query = s.createQuery(hql,Departamento.class);
-		return query.getSingleResult().getCodigo()+1;
+		String hql= "SELECT max(codigo) from Departamento";
+		Query query = s.createQuery(hql);
+		return (int)query.getSingleResult()+1;
 	}
 }
