@@ -1,5 +1,7 @@
 package hibernate.clasesDAO;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -49,5 +51,19 @@ public class EmpleadoDAO {
 		DetachedCriteria dcr = DetachedCriteria.forClass(Empleado.class);
 		dcr.add(Property.forName("codDepartamento").eq(codDep));
 		return dcr.getExecutableCriteria(s).list();
+	}
+	
+	public static List<Empleado> getEmpleadosEdad(Session s, int edad) {
+		
+		String maxFecha = LocalDateTime.from(LocalDateTime.now()).format(DateTimeFormatter.ofPattern("dd-MM-yy"));
+		String minFecha = LocalDateTime.from(LocalDateTime.now()).minusYears(edad).format(DateTimeFormatter.ofPattern("dd-MM-yy"));
+		
+		String hql= "SELECT Empleado from Empleado WHERE lugarNacimiento between :minDate and :maxDate";
+		
+		Query<Empleado> q = s.createQuery(hql);  
+		q.setParameter("minDate",minFecha); 
+		q.setParameter("maxDate", maxFecha);
+		
+		return q.list();
 	}
 }
