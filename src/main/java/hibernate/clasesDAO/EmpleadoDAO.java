@@ -1,6 +1,7 @@
 package hibernate.clasesDAO;
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import hibernate.ejercicioHibernate.Empleado;
 
@@ -27,5 +28,11 @@ public class EmpleadoDAO {
 	
 	public static void updateEmpleado(Session s, Empleado empleado) {
 		s.update(empleado);
+	}
+	
+	public static int getNewCodigo(Session s) {
+		String hql= "SELECT max(Empleado.codigo) from Empleado";
+		Query<Empleado> query = s.createQuery(hql,Empleado.class);
+		return query.getSingleResult().getCodigo()+1;
 	}
 }
