@@ -32,8 +32,7 @@ public class principal {
 			}while(opcion<1 && opcion>5);
 		}
 		catch (Exception e) {
-			// TODO: handle exception
-			
+			HibernateUtil.logger.warn("Excepcion al elegir la opcion del menu",e);
 			System.exit(-1);
 		}
 		
@@ -52,7 +51,7 @@ public class principal {
 				opcion = sc.nextInt();
 			} while (opcion < 1 && opcion > 3);
 		} catch (Exception e) {
-			// TODO: handle exception
+			HibernateUtil.logger.warn("Excepcion al pedir la tabla a usar.",e);
 			System.exit(-1);
 		}
 
@@ -69,7 +68,7 @@ public class principal {
 				codigo = sc.nextInt();
 
 		} catch (Exception e) {
-			// TODO: handle exception
+			HibernateUtil.logger.warn("Excepcion al pedir el codigo.",e);
 			System.exit(-1);
 		}
 
