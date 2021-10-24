@@ -55,14 +55,12 @@ public class EmpleadoDAO {
 	
 	public static List<Empleado> getEmpleadosEdad(Session s, int edad) {
 		
-		String maxFecha = LocalDateTime.from(LocalDateTime.now()).format(DateTimeFormatter.ofPattern("dd-MM-yy"));
-		String minFecha = LocalDateTime.from(LocalDateTime.now()).minusYears(edad).format(DateTimeFormatter.ofPattern("dd-MM-yy"));
+		String fecha = LocalDateTime.from(LocalDateTime.now()).minusYears(edad).format(DateTimeFormatter.ofPattern("dd-MM-yy"));
 		
-		String hql= "SELECT Empleado from Empleado WHERE lugarNacimiento between :minDate and :maxDate";
+		String hql= "from Empleado WHERE fechaNacimiento >= :fecha";
 		
 		Query<Empleado> q = s.createQuery(hql);  
-		q.setParameter("minDate",minFecha); 
-		q.setParameter("maxDate", maxFecha);
+		q.setParameter("fecha",fecha); 
 		
 		return q.list();
 	}
