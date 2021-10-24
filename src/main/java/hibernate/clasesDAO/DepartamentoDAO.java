@@ -12,6 +12,7 @@ public class DepartamentoDAO {
 	}
 	
 	public static void insertEmpleado(Session s, Departamento departamento) {
+		departamento.setCodigo(getNewCodigo(s));
 		s.save(departamento);
 	}
 	

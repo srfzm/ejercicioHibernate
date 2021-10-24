@@ -19,6 +19,7 @@ public class EmpleadoDAO {
 		}
 	
 	public static void insertEmpleado(Session s, Empleado empleado) {
+		empleado.setCodigo(getNewCodigo(s));
 		s.save(empleado);
 	}
 	
