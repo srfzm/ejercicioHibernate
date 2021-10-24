@@ -1,6 +1,10 @@
 package hibernate.clasesDAO;
 
+import java.util.List;
+
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Property;
 import org.hibernate.query.Query;
 
 import hibernate.ejercicioHibernate.Empleado;
@@ -39,5 +43,11 @@ public class EmpleadoDAO {
 		String hql= "SELECT max(codigo) from Empleado";
 		Query query = s.createQuery(hql);
 		return (int)query.getSingleResult()+1;
+	}
+	
+	public static List<Empleado> getEmpleadosCodDep(Session s, int codDep) {
+		DetachedCriteria dcr = DetachedCriteria.forClass(Empleado.class);
+		dcr.add(Property.forName("codDepartamento").eq(codDep));
+		return dcr.getExecutableCriteria(s).list();
 	}
 }
