@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import hibernate.ejercicioHibernate.Empleado;
+import hibernate.principal.HibernateUtil;
 
 public class EmpleadoDAO {
 
@@ -21,14 +22,17 @@ public class EmpleadoDAO {
 	public static void insertEmpleado(Session s, Empleado empleado) {
 		empleado.setCodigo(getNewCodigo(s));
 		s.save(empleado);
+		HibernateUtil.logger.info("Realizada inserccion.");
 	}
 	
 	public static void deleteEmpleado(Session s, Empleado empleado) {
 		s.delete(empleado);
+		HibernateUtil.logger.info("Realizado borrado.");
 	}
 	
 	public static void updateEmpleado(Session s, Empleado empleado) {
 		s.update(empleado);
+		HibernateUtil.logger.info("Realizada actualizacion.");
 	}
 	
 	public static int getNewCodigo(Session s) {
