@@ -1,52 +1,289 @@
 package hibernate.principal;
 
+import java.util.Scanner;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import hibernate.clasesDAO.DepartamentoDAO;
 import hibernate.clasesDAO.EmpleadoDAO;
+import hibernate.ejercicioHibernate.Departamento;
 import hibernate.ejercicioHibernate.Empleado;
 
 
 
 public class principal {
 	
-	public static void main(String[] args) {
+	public static int menuPrincipal(Scanner sc) {
 		
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		Transaction tx = null;
+		int opcion=0;
 		
-//		Empleado getEmp = EmpleadoDAO.getEmpleado(session, 1);
-//		
-//		System.out.println(getEmp.toString());
+		try
+		{
+			do
+			{
+				System.out.println("1. Insercion");
+				System.out.println("2. Borrado");
+				System.out.println("3. Actualizacion");
+				System.out.println("4. Lectura");
+				System.out.println("5. Salir");
+				opcion = sc.nextInt();
+				
+			}while(opcion<1 && opcion>5);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			
+			System.exit(-1);
+		}
 		
+		return opcion;
+	}
+	
+	public static int pedirTabla(Scanner sc) {
+
+		int opcion = 0;
+
 		try {
-			
-			tx = session.beginTransaction();
-			
-			Empleado emp = new Empleado(400, "Nombre", "Apellido1", "Apellido2", "Lugar nacimiento", "fecha", "Direccion", "telefono", "puesto", 0);
-			EmpleadoDAO.insertEmpleado(session, emp);
-			
-//			Empleado borr = EmpleadoDAO.getEmpleado(session, 400);
-//			
-//			EmpleadoDAO.deleteEmpleado(session, borr);
-			
-			emp.setApellido1("updateApellido");
-			
-			EmpleadoDAO.updateEmpleado(session, emp);
-			
-			tx.commit();
-			
-			
-			
+			do {
+				System.out.println("1. Departamento");
+				System.out.println("2. Empleado");
+				System.out.println("3. Cancelar operacion y salir");
+				opcion = sc.nextInt();
+			} while (opcion < 1 && opcion > 3);
 		} catch (Exception e) {
-			if (tx != null) {
-			    tx.rollback();
-			  }
-		}finally {
-			if (session != null) {
-				session.close();
+			// TODO: handle exception
+			System.exit(-1);
+		}
+
+		return opcion;
+
+	}
+	
+	public static int pedirCodigo(Scanner sc) {
+
+		int codigo = 0;
+
+		try {
+				System.out.println("1. Introduzca el Codigo");
+				codigo = sc.nextInt();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.exit(-1);
+		}
+
+		return codigo;
+
+	}
+	
+	public static void pedirDepartamento(Session s,Scanner sc, Departamento d) {
+		Empleado em;
+		int codRes;
+
+		try {
+			System.out.println("Introduzca el nombre del departamento");
+			d.setNombre(sc.next());
+			System.out.println("Introduzca el codigo del responsable");
+			codRes = sc.nextInt();
+			em = EmpleadoDAO.getEmpleado(s, codRes);
+			while(em==null && codRes!=0)
+			{
+				System.out.println("El responsable con ese codigo no existe, introduzca otro o 0 si no quiere asignar uno.");
+				codRes=sc.nextInt();
+				em = EmpleadoDAO.getEmpleado(s, codRes);
 			}
+			d.setCodResponsable(codRes);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.exit(-1);
+		}
+
+	}
+	
+	public static void pedirEmpleado(Session s,Scanner sc, Empleado em) {
+		Departamento d;
+		int codDep;
+
+		try {
+			System.out.println("Introduzca el nombre del empleado");
+			em.setNombre(sc.next());
+			System.out.println("Introduzca el primer apellido");
+			em.setApellido1(sc.next());
+			System.out.println("Introduzca el segundo apellido");
+			em.setApellido2(sc.next());
+			em.setDireccion("X");
+			em.setFechaNacimiento("X");
+			em.setLugarNacimiento("X");
+			em.setPuesto("X");
+			em.setTelefono("X");
+			
+			System.out.println("Introduzca codigo del Departamento");
+			codDep = sc.nextInt();
+			d = DepartamentoDAO.getDepartamento(s, codDep);
+			while(d==null && codDep!=0)
+			{
+				System.out.println("El departamento con ese codigo no existe, introduzca otro o 0 si no quiere asignar uno.");
+				codDep=sc.nextInt();
+				d = DepartamentoDAO.getDepartamento(s, codDep);
+				
+			}
+			em.setCodDepartamento(codDep);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.exit(-1);
+		}
+
+	}
+	
+	public static void main(String[] args) {
+
+		Scanner sc = new Scanner(System.in);
+		Session session;
+		Transaction tx = null;
+		int opcion;
+		int tabla;
+		int codigo;
+
+		opcion = menuPrincipal(sc);
+		if (opcion == 5) {
+			// TODO:Log
+			return;
+		}
+
+		tabla = pedirTabla(sc);
+		if (tabla == 3) {
+			// TODO:log
+			return;
+		}
+
+		session = HibernateUtil.getSessionFactory().openSession();
+
+		switch (opcion) {
+		case 1:
+			try {
+				tx = session.beginTransaction();
+				if (tabla == 1) {
+
+					Departamento d = new Departamento();
+					pedirDepartamento(session, sc, d);
+					DepartamentoDAO.insertDepartamento(session, d);
+
+				} else {
+					Empleado e = new Empleado();
+					pedirEmpleado(session, sc, e);
+					EmpleadoDAO.insertEmpleado(session, e);
+				}
+				tx.commit();
+
+			} catch (Exception e) {
+				if (tx != null) {
+					tx.rollback();
+				}
+			} finally {
+				if (session != null) {
+					session.close();
+				}
+			}
+			break;
+		case 2:
+			if (tabla == 1) {
+
+				codigo = pedirCodigo(sc);
+				try {
+
+					Departamento d = new Departamento();
+
+					tx = session.beginTransaction();
+					d = DepartamentoDAO.getDepartamento(session, codigo);
+					DepartamentoDAO.deleteDepartamento(session, d);
+
+					tx.commit();
+
+				} catch (Exception e) {
+					if (tx != null) {
+						tx.rollback();
+					}
+				} finally {
+					if (session != null) {
+						session.close();
+					}
+				}
+
+			} else {
+				
+				codigo = pedirCodigo(sc);
+				try {
+
+					Empleado d = new Empleado();
+
+					tx = session.beginTransaction();
+					d = EmpleadoDAO.getEmpleado(session, codigo);
+					EmpleadoDAO.deleteEmpleado(session, d);
+
+					tx.commit();
+
+				} catch (Exception e) {
+					if (tx != null) {
+						tx.rollback();
+					}
+				} finally {
+					if (session != null) {
+						session.close();
+					}
+				}
+
+			}
+			break;
+		case 3:
+			codigo = pedirCodigo(sc);
+			try {
+				tx = session.beginTransaction();
+				if (tabla == 1) {
+					Departamento d = DepartamentoDAO.getDepartamento(session, codigo);
+					if (d != null) {
+						pedirDepartamento(session, sc, d);
+						DepartamentoDAO.updateDepartamento(session, d);
+					} else {
+						// TODO:log
+					}
+
+				} else {
+					Empleado e = EmpleadoDAO.getEmpleado(session, codigo);
+					if (e != null) {
+						pedirEmpleado(session, sc, e);
+						EmpleadoDAO.updateEmpleado(session, e);
+					} else {
+						// TODO:log
+					}
+				}
+				tx.commit();
+
+			} catch (Exception e) {
+				if (tx != null) {
+					tx.rollback();
+				}
+			} finally {
+				if (session != null) {
+					session.close();
+				}
+			}
+			break;
+		case 4:
+			codigo = pedirCodigo(sc);
+			if (tabla == 1) {
+				Departamento d = DepartamentoDAO.getDepartamento(session, codigo);
+				if(d!=null)
+					System.out.println(d.toString());
+
+			} else {
+				Empleado e = EmpleadoDAO.getEmpleado(session, codigo);
+				if(e!=null)
+					System.out.println(e.toString());
+			}
+			break;
 		}
 	}
-
 }

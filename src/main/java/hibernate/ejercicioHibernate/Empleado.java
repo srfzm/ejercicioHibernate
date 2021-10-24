@@ -135,4 +135,9 @@ public class Empleado implements java.io.Serializable {
 		this.codDepartamento = codDepartamento;
 	}
 
+	@Override
+	public String toString() {
+		return "Empleado [codigo=" + codigo + ", nombre=" + nombre + ", apellido1=" + apellido1 + ", apellido2="
+				+ apellido2 + ", codDepartamento=" + codDepartamento + "]";
+	}
 }

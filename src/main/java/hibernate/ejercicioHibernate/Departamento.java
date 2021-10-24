@@ -57,4 +57,8 @@ public class Departamento implements java.io.Serializable {
 		this.codResponsable = codResponsable;
 	}
 
+	@Override
+	public String toString() {
+		return "Departamento [codigo=" + codigo + ", nombre=" + nombre + ", codResponsable=" + codResponsable + "]";
+	}
 }
