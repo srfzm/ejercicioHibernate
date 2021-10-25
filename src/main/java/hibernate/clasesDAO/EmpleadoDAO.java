@@ -68,7 +68,7 @@ public class EmpleadoDAO {
 		try {
 			fechaCorte = formato.parse(fecha);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			HibernateUtil.logger.warn("Excepcion al parsear la fecha.",e);
 			e.printStackTrace();
 		}
 
@@ -87,7 +87,7 @@ public class EmpleadoDAO {
 					emp.add(empleado);
 				}
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+				HibernateUtil.logger.warn("Excepcion al parsear la fecha.",e);
 				e.printStackTrace();
 			}
 		}

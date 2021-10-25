@@ -27,7 +27,9 @@ public class principal {
 				System.out.println("2. Borrado");
 				System.out.println("3. Actualizacion");
 				System.out.println("4. Lectura");
-				System.out.println("5. Salir");
+				System.out.println("5. Buscar empleados por codigo de departamento");
+				System.out.println("6. Buscar empleados mayores que cierta edad");
+				System.out.println("7. Salir");
 				opcion = sc.nextInt();
 				
 			}while(opcion<1 && opcion>5);
@@ -148,21 +150,25 @@ public class principal {
 		Session session;
 		Transaction tx = null;
 		int opcion;
-		int tabla;
+		int tabla=0;
 		int codigo;
+		List<Empleado> lista;
 		
 		HibernateUtil.logger.info("Iniciada Aplicacion.");
 
 		opcion = menuPrincipal(sc);
-		if (opcion == 5) {
+		if (opcion == 7) {
 			HibernateUtil.logger.info("Elegida la opcion de salida.");
 			return;
 		}
 
-		tabla = pedirTabla(sc);
-		if (tabla == 3) {
-			HibernateUtil.logger.info("Cancelada operacion y salida del programa.");
-			return;
+		if(opcion<5)
+		{
+			tabla = pedirTabla(sc);
+			if (tabla == 3) {
+				HibernateUtil.logger.info("Cancelada operacion y salida del programa.");
+				return;
+			}
 		}
 
 		session = HibernateUtil.getSessionFactory().openSession();
@@ -306,6 +312,39 @@ public class principal {
 					System.out.println(e.toString());
 					HibernateUtil.logger.info("Consulta:" + e.toString());
 				}
+			}
+			break;
+		case 5:
+			HibernateUtil.logger.info("Consulta por codigo de departamento.");
+			codigo = pedirCodigo(sc);
+			lista = EmpleadoDAO.getEmpleadosCodDep(session, codigo);
+			if(!lista.isEmpty())
+			{
+				for (Empleado empleado : lista) {
+					System.out.println(empleado.toString());
+					HibernateUtil.logger.info("Consulta por codDep="+codigo+":" + empleado.toString());
+				}
+			}
+			else
+			{
+				System.out.println("No existe ningun resultado para el codigo indicado.");
+			}
+			break;
+		case 6:
+			HibernateUtil.logger.info("Consulta por edad.");
+			System.out.println("Introduce la edad");
+			int edad = sc.nextInt();
+			lista = EmpleadoDAO.getEmpleadosEdad(session, edad);
+			if(!lista.isEmpty())
+			{
+				for (Empleado empleado : lista) {
+					System.out.println(empleado.toString());
+					HibernateUtil.logger.info("Consulta por edad>="+edad+":" + empleado.toString());
+				}
+			}
+			else
+			{
+				System.out.println("No existe ningun resultado para la edad indicada.");
 			}
 			break;
 		}
