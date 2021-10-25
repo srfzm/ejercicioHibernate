@@ -151,179 +151,165 @@ public class principal {
 		int tabla;
 		int codigo;
 		
+		HibernateUtil.logger.info("Iniciada Aplicacion.");
+
+		opcion = menuPrincipal(sc);
+		if (opcion == 5) {
+			HibernateUtil.logger.info("Elegida la opcion de salida.");
+			return;
+		}
+
+		tabla = pedirTabla(sc);
+		if (tabla == 3) {
+			HibernateUtil.logger.info("Cancelada operacion y salida del programa.");
+			return;
+		}
+
 		session = HibernateUtil.getSessionFactory().openSession();
-		List<Empleado> list = EmpleadoDAO.getEmpleadosEdad(session, 18);
-		System.out.println(list);
-		if(list!=null)
-		{
-			for (Empleado empleado : list) {
-				System.out.println(empleado.toString());
+
+		switch (opcion) {
+		case 1:
+			HibernateUtil.logger.info("Elegida la opcion de Insertar");
+			try {
+				tx = session.beginTransaction();
+				if (tabla == 1) {
+
+					Departamento d = new Departamento();
+					pedirDepartamento(session, sc, d);
+					DepartamentoDAO.insertDepartamento(session, d);
+
+				} else {
+					Empleado e = new Empleado();
+					pedirEmpleado(session, sc, e);
+					EmpleadoDAO.insertEmpleado(session, e);
+				}
+				tx.commit();
+
+			} catch (Exception e) {
+				if (tx != null) {
+					tx.rollback();
+				}
+				HibernateUtil.logger.warn("Excepcion al Insertar.",e);
+			} finally {
+				if (session != null) {
+					session.close();
+					HibernateUtil.logger.info("Sesion cerrada");
+				}
 			}
+			break;
+		case 2:
+			HibernateUtil.logger.info("Elegida la opcion de borrar.");
+			if (tabla == 1) {
+
+				codigo = pedirCodigo(sc);
+				try {
+
+					Departamento d = new Departamento();
+
+					tx = session.beginTransaction();
+					d = DepartamentoDAO.getDepartamento(session, codigo);
+					DepartamentoDAO.deleteDepartamento(session, d);
+
+					tx.commit();
+
+				} catch (Exception e) {
+					if (tx != null) {
+						tx.rollback();
+					}
+					HibernateUtil.logger.warn("Excepcion al borrar",e);
+				} finally {
+					if (session != null) {
+						session.close();
+						HibernateUtil.logger.info("Sesion cerrada");
+					}
+				}
+
+			} else {
+				
+				codigo = pedirCodigo(sc);
+				try {
+
+					Empleado d = new Empleado();
+
+					tx = session.beginTransaction();
+					d = EmpleadoDAO.getEmpleado(session, codigo);
+					EmpleadoDAO.deleteEmpleado(session, d);
+
+					tx.commit();
+
+				} catch (Exception e) {
+					if (tx != null) {
+						tx.rollback();
+					}
+					HibernateUtil.logger.warn("Excepcion al borrar",e);
+				} finally {
+					if (session != null) {
+						session.close();
+						HibernateUtil.logger.info("Sesion cerrada");
+					}
+				}
+
+			}
+			break;
+		case 3:
+			HibernateUtil.logger.info("Elegida la opcion de actualizar.");
+			codigo = pedirCodigo(sc);
+			try {
+				tx = session.beginTransaction();
+				if (tabla == 1) {
+					Departamento d = DepartamentoDAO.getDepartamento(session, codigo);
+					if (d != null) {
+						pedirDepartamento(session, sc, d);
+						DepartamentoDAO.updateDepartamento(session, d);
+					} else {
+						System.out.println("El departamento no existe.");
+						HibernateUtil.logger.info("El departamento no existe.");
+					}
+
+				} else {
+					Empleado e = EmpleadoDAO.getEmpleado(session, codigo);
+					if (e != null) {
+						pedirEmpleado(session, sc, e);
+						EmpleadoDAO.updateEmpleado(session, e);
+					} else {
+						System.out.println("El empleado no existe.");
+						HibernateUtil.logger.info("El empleado no existe.");
+					}
+				}
+				tx.commit();
+
+			} catch (Exception e) {
+				if (tx != null) {
+					tx.rollback();
+					HibernateUtil.logger.warn("Excepcion al actualizar",e);
+				}
+			} finally {
+				if (session != null) {
+					session.close();
+					HibernateUtil.logger.info("Sesion cerrada");
+				}
+			}
+			break;
+		case 4:
+			HibernateUtil.logger.info("Elegida la opcion de mostrar.");
+			codigo = pedirCodigo(sc);
+			if (tabla == 1) {
+				Departamento d = DepartamentoDAO.getDepartamento(session, codigo);
+				if (d != null) {
+					System.out.println(d.toString());
+					HibernateUtil.logger.info("Consulta:" + d.toString());
+				}
+
+			} else {
+				Empleado e = EmpleadoDAO.getEmpleado(session, codigo);
+				if (e != null) {
+					System.out.println(e.toString());
+					HibernateUtil.logger.info("Consulta:" + e.toString());
+				}
+			}
+			break;
 		}
-		else
-		{
-			System.out.println("Lista vacia");
-		}
-		
-//		HibernateUtil.logger.info("Iniciada Aplicacion.");
-//
-//		opcion = menuPrincipal(sc);
-//		if (opcion == 5) {
-//			HibernateUtil.logger.info("Elegida la opcion de salida.");
-//			return;
-//		}
-//
-//		tabla = pedirTabla(sc);
-//		if (tabla == 3) {
-//			HibernateUtil.logger.info("Cancelada operacion y salida del programa.");
-//			return;
-//		}
-//
-//		session = HibernateUtil.getSessionFactory().openSession();
-//
-//		switch (opcion) {
-//		case 1:
-//			HibernateUtil.logger.info("Elegida la opcion de Insertar");
-//			try {
-//				tx = session.beginTransaction();
-//				if (tabla == 1) {
-//
-//					Departamento d = new Departamento();
-//					pedirDepartamento(session, sc, d);
-//					DepartamentoDAO.insertDepartamento(session, d);
-//
-//				} else {
-//					Empleado e = new Empleado();
-//					pedirEmpleado(session, sc, e);
-//					EmpleadoDAO.insertEmpleado(session, e);
-//				}
-//				tx.commit();
-//
-//			} catch (Exception e) {
-//				if (tx != null) {
-//					tx.rollback();
-//				}
-//				HibernateUtil.logger.warn("Excepcion al Insertar.",e);
-//			} finally {
-//				if (session != null) {
-//					session.close();
-//					HibernateUtil.logger.info("Sesion cerrada");
-//				}
-//			}
-//			break;
-//		case 2:
-//			HibernateUtil.logger.info("Elegida la opcion de borrar.");
-//			if (tabla == 1) {
-//
-//				codigo = pedirCodigo(sc);
-//				try {
-//
-//					Departamento d = new Departamento();
-//
-//					tx = session.beginTransaction();
-//					d = DepartamentoDAO.getDepartamento(session, codigo);
-//					DepartamentoDAO.deleteDepartamento(session, d);
-//
-//					tx.commit();
-//
-//				} catch (Exception e) {
-//					if (tx != null) {
-//						tx.rollback();
-//					}
-//					HibernateUtil.logger.warn("Excepcion al borrar",e);
-//				} finally {
-//					if (session != null) {
-//						session.close();
-//						HibernateUtil.logger.info("Sesion cerrada");
-//					}
-//				}
-//
-//			} else {
-//				
-//				codigo = pedirCodigo(sc);
-//				try {
-//
-//					Empleado d = new Empleado();
-//
-//					tx = session.beginTransaction();
-//					d = EmpleadoDAO.getEmpleado(session, codigo);
-//					EmpleadoDAO.deleteEmpleado(session, d);
-//
-//					tx.commit();
-//
-//				} catch (Exception e) {
-//					if (tx != null) {
-//						tx.rollback();
-//					}
-//					HibernateUtil.logger.warn("Excepcion al borrar",e);
-//				} finally {
-//					if (session != null) {
-//						session.close();
-//						HibernateUtil.logger.info("Sesion cerrada");
-//					}
-//				}
-//
-//			}
-//			break;
-//		case 3:
-//			HibernateUtil.logger.info("Elegida la opcion de actualizar.");
-//			codigo = pedirCodigo(sc);
-//			try {
-//				tx = session.beginTransaction();
-//				if (tabla == 1) {
-//					Departamento d = DepartamentoDAO.getDepartamento(session, codigo);
-//					if (d != null) {
-//						pedirDepartamento(session, sc, d);
-//						DepartamentoDAO.updateDepartamento(session, d);
-//					} else {
-//						System.out.println("El departamento no existe.");
-//						HibernateUtil.logger.info("El departamento no existe.");
-//					}
-//
-//				} else {
-//					Empleado e = EmpleadoDAO.getEmpleado(session, codigo);
-//					if (e != null) {
-//						pedirEmpleado(session, sc, e);
-//						EmpleadoDAO.updateEmpleado(session, e);
-//					} else {
-//						System.out.println("El empleado no existe.");
-//						HibernateUtil.logger.info("El empleado no existe.");
-//					}
-//				}
-//				tx.commit();
-//
-//			} catch (Exception e) {
-//				if (tx != null) {
-//					tx.rollback();
-//					HibernateUtil.logger.warn("Excepcion al actualizar",e);
-//				}
-//			} finally {
-//				if (session != null) {
-//					session.close();
-//					HibernateUtil.logger.info("Sesion cerrada");
-//				}
-//			}
-//			break;
-//		case 4:
-//			HibernateUtil.logger.info("Elegida la opcion de mostrar.");
-//			codigo = pedirCodigo(sc);
-//			if (tabla == 1) {
-//				Departamento d = DepartamentoDAO.getDepartamento(session, codigo);
-//				if (d != null) {
-//					System.out.println(d.toString());
-//					HibernateUtil.logger.info("Consulta:" + d.toString());
-//				}
-//
-//			} else {
-//				Empleado e = EmpleadoDAO.getEmpleado(session, codigo);
-//				if (e != null) {
-//					System.out.println(e.toString());
-//					HibernateUtil.logger.info("Consulta:" + e.toString());
-//				}
-//			}
-//			break;
-//		}
-//
-//		HibernateUtil.logger.info("Finalizada Aplicacion.");
+
+		HibernateUtil.logger.info("Finalizada Aplicacion.");
 	}
 }
